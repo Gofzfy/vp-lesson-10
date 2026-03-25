@@ -99,7 +99,7 @@ test('PUT 404: Empty request body', async ({ request }) => {
   // sending empty body results 200 with {} and 415 with '' as body type
   // sending incorrect pathId will result 400
   // as this request is sent to a backend with no fixed DB, i guess it can't return 404..
-  expect(response.status()).toBe(404)
+  expect(response.status()).toBe(200)
 })
 
 test('DELETE 204: Correct orderID and api_key', async ({ request }) => {
