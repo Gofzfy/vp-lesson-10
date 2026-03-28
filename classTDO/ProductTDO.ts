@@ -1,3 +1,4 @@
+// DTO for Homework 11
 export class ProductTDO {
   id: number;
   name: string;
