@@ -127,7 +127,7 @@ test('DELETE 401: Correct orderID and incorrect api_key', async ({ request }) =>
 test('GET 200: Correct username and password', async ({ request }) => {
   const username = 'Test'
   const password = 'test123'
-  const pathId = `/test-orders?username=${username}&password=${password}`
+  const pathId = `/test-orders/auth?username=${username}&password=${password}`
   const response = await request.get(`https://backend.tallinn-learning.ee${pathId}`)
   const responseBody = await response.json()
   console.log(responseBody.message)
@@ -145,7 +145,7 @@ test('GET 500: Empty username or password', async ({ request }) => {
     const user = testData[i]
     const username = user[0]
     const password = user[1]
-    const pathId = `/test-orders?username=${username}&password=${password}`
+    const pathId = `/test-orders/auth?username=${username}&password=${password}`
     const response = await request.get(`https://backend.tallinn-learning.ee${pathId}`)
     const responseBody = await response.json()
     console.log(responseBody.message)
