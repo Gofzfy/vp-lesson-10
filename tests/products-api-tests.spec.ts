@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 import { StatusCodes } from 'http-status-codes'
-import { ProductDTO } from '../src/dto/ProductTDO'
+import { ProductDTO } from '../src/dto/ProductDTO'
 
 test.describe('Lesson 11 -> Product API tests', () => {
   const BaseEndpointURL = 'https://backend.tallinn-learning.ee/products'

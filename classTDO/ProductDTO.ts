@@ -1,5 +1,5 @@
 // DTO for Homework 11
-export class ProductTDO {
+export class ProductDTO {
   id: number;
   name: string;
   price: number;

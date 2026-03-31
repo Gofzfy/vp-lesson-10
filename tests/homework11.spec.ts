@@ -1,4 +1,4 @@
-import { ProductTDO } from '../classTDO/ProductTDO'
+import { ProductDTO } from '../classTDO/ProductDTO'
 import { expect, test } from '@playwright/test'
 import { StatusCodes } from 'http-status-codes'
 
@@ -7,22 +7,22 @@ test.describe('Homework 11 -> Product API tests', () => {
   const AUTH = { 'X-API-Key': 'my-secret-api-key' } // correct API
   const nonAuth = { 'X-API-Key': 'my-incorrect-api-key' } // incorrect API
   const nonId = '-1' // incorrect product id
-  let newProductTBO: ProductTDO // variable to use TBO, created inside beforeEach and delete inside afterEach
-  const updatedTBO = new ProductTDO(0, 'order987', 909, null) // TBO used for PUT requests
+  let newProductDTO: ProductDTO // variable to use TBO, created inside beforeEach and delete inside afterEach
+  const updatedDTO = new ProductDTO(0, 'order987', 909, null) // TBO used for PUT requests
 
   // Creating TBO before each test and use it inside test if needed
   test.beforeEach(async ({ request }) => {
-    newProductTBO = new ProductTDO(0, 'order123', 303, '2026-03-23T18:04:11.285Z')
+    newProductDTO = new ProductDTO(0, 'order123', 303, '2026-03-23T18:04:11.285Z')
     const createResponse = await request.post(BaseEndpointURL, {
       headers: AUTH,
-      data: newProductTBO,
+      data: newProductDTO,
     })
-    newProductTBO = await createResponse.json()
+    newProductDTO = await createResponse.json()
   })
 
   // Deleting created TBO after each test to clean up DB
   test.afterEach(async ({ request }) => {
-    await request.delete(`${BaseEndpointURL}/${newProductTBO.id}`, {
+    await request.delete(`${BaseEndpointURL}/${newProductDTO.id}`, {
       headers: AUTH,
     })
   })
@@ -31,7 +31,7 @@ test.describe('Homework 11 -> Product API tests', () => {
     const response = await request.get(BaseEndpointURL, {
       headers: AUTH,
     })
-    const responseBody: ProductTDO[] = await response.json()
+    const responseBody: ProductDTO[] = await response.json()
     expect(response.status()).toBe(StatusCodes.OK)
     expect(responseBody.length).toBeDefined()
     expect(responseBody.length).toBeGreaterThanOrEqual(1)
@@ -47,13 +47,13 @@ test.describe('Homework 11 -> Product API tests', () => {
   test('200 POST /products - check product creation', async ({ request }) => {
     const createResponse = await request.post(BaseEndpointURL, {
       headers: AUTH,
-      data: newProductTBO,
+      data: newProductDTO,
     })
-    const createResponseBody: ProductTDO = await createResponse.json()
+    const createResponseBody: ProductDTO = await createResponse.json()
     expect(createResponse.status()).toBe(StatusCodes.OK)
     expect(createResponseBody.id).toBeGreaterThan(0)
-    expect(createResponseBody.name).toBe(newProductTBO.name)
-    expect(createResponseBody.price).toBe(newProductTBO.price)
+    expect(createResponseBody.name).toBe(newProductDTO.name)
+    expect(createResponseBody.price).toBe(newProductDTO.price)
     expect(createResponseBody.createdAt).toBeDefined()
 
     // Cleanup after test
@@ -64,23 +64,23 @@ test.describe('Homework 11 -> Product API tests', () => {
   })
 
   test('400 POST /products - check product creation with empty body', async ({ request }) => {
-    const createProductTBO = {}
+    const createProductDTO = {}
     const createResponse = await request.post(BaseEndpointURL, {
       headers: AUTH,
-      data: createProductTBO,
+      data: createProductDTO,
     })
     expect(createResponse.status()).toBe(StatusCodes.BAD_REQUEST)
   })
 
   test('200 GET /products/{id} - check product search by id', async ({ request }) => {
-    const searchResponse = await request.get(`${BaseEndpointURL}/${newProductTBO.id}`, {
+    const searchResponse = await request.get(`${BaseEndpointURL}/${newProductDTO.id}`, {
       headers: AUTH,
     })
-    const searchResponseBody: ProductTDO = await searchResponse.json()
+    const searchResponseBody: ProductDTO = await searchResponse.json()
     expect(searchResponse.status()).toBe(StatusCodes.OK)
-    expect.soft(searchResponseBody.id).toBe(newProductTBO.id)
-    expect.soft(searchResponseBody.name).toBe(newProductTBO.name)
-    expect.soft(searchResponseBody.price).toBe(newProductTBO.price)
+    expect.soft(searchResponseBody.id).toBe(newProductDTO.id)
+    expect.soft(searchResponseBody.name).toBe(newProductDTO.name)
+    expect.soft(searchResponseBody.price).toBe(newProductDTO.price)
     expect.soft(searchResponseBody.createdAt).toBeDefined()
   })
 
@@ -92,25 +92,25 @@ test.describe('Homework 11 -> Product API tests', () => {
   })
 
   test('200 PUT /products{id} - update product by id', async ({ request }) => {
-    const updateResponse = await request.put(`${BaseEndpointURL}/${newProductTBO.id}`, {
+    const updateResponse = await request.put(`${BaseEndpointURL}/${newProductDTO.id}`, {
       headers: AUTH,
-      data: updatedTBO,
+      data: updatedDTO,
     })
-    const updateResponseBody: ProductTDO = await updateResponse.json()
+    const updateResponseBody: ProductDTO = await updateResponse.json()
     expect(updateResponse.status()).toBe(StatusCodes.OK)
     expect(updateResponseBody.id).toBeGreaterThan(0)
-    expect(updateResponseBody.id).toBe(newProductTBO.id)
-    expect(updateResponseBody.name).toBe(updatedTBO.name)
-    expect(updateResponseBody.name).not.toBe(newProductTBO.name)
-    expect(updateResponseBody.price).toBe(updatedTBO.price)
-    expect(updateResponseBody.price).not.toBe(newProductTBO.price)
+    expect(updateResponseBody.id).toBe(newProductDTO.id)
+    expect(updateResponseBody.name).toBe(updatedDTO.name)
+    expect(updateResponseBody.name).not.toBe(newProductDTO.name)
+    expect(updateResponseBody.price).toBe(updatedDTO.price)
+    expect(updateResponseBody.price).not.toBe(newProductDTO.price)
     expect(updateResponseBody.createdAt).toBeDefined()
   })
 
   test('400 PUT /products{id} - update product by incorrect id', async ({ request }) => {
     const updateResponse = await request.put(`${BaseEndpointURL}/${nonId}`, {
       headers: AUTH,
-      data: updatedTBO,
+      data: updatedDTO,
     })
     expect(updateResponse.status()).toBe(StatusCodes.BAD_REQUEST)
   })
@@ -123,7 +123,7 @@ test.describe('Homework 11 -> Product API tests', () => {
   })
 
   test('204 DELETE /products{id} - check product deletion', async ({ request }) => {
-    const deleteResponse = await request.delete(`${BaseEndpointURL}/${newProductTBO.id}`, {
+    const deleteResponse = await request.delete(`${BaseEndpointURL}/${newProductDTO.id}`, {
       headers: AUTH,
     })
     expect(deleteResponse.status()).toBe(StatusCodes.NO_CONTENT)
