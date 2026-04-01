@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export class LoginDTO {
   username: string;
   password: string;
@@ -15,3 +17,7 @@ export class LoginDTO {
     return new LoginDTO(process.env.USER || 'Missing USER env var', process.env.PASSWORD || 'Missing PASSWORD env var');
   }
 }
+
+export const LoginSchema = z.string();
+
+export type Login = z.infer<typeof LoginSchema>;
